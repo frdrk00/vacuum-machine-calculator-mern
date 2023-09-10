@@ -1,54 +1,33 @@
-import {
-  ClerkProvider,
-  SignedIn,
-  SignedOut,
-  RedirectToSignIn,
-  SignIn,
-  SignUp,
-} from '@clerk/clerk-react'
-import { Route, Routes, useNavigate } from 'react-router-dom'
-import Home from './pages/Home'
-
-if (!process.env.REACT_APP_CLERK_PUBLISHABLE_KEY) {
-  throw new Error('Missing Publishable Key')
-}
-
-const clerkPubKey = process.env.REACT_APP_CLERK_PUBLISHABLE_KEY
-
-function ClerkProviderWithRoutes() {
-  const navigate = useNavigate()
-
-  return (
-    <ClerkProvider publishableKey={clerkPubKey} navigate={(to) => navigate(to)}>
-      <Routes>
-        <Route
-          path="/sign-in/*"
-          element={<SignIn routing="path" path="/sign-in" />}
-        />
-        <Route
-          path="/sign-up/*"
-          element={<SignUp routing="path" path="/sign-up" />}
-        />
-        <Route
-          path="/"
-          element={
-            <>
-              <SignedIn>
-                <Home />
-              </SignedIn>
-              <SignedOut>
-                <RedirectToSignIn redirectUrl={'/'} />
-              </SignedOut>
-            </>
-          }
-        />
-      </Routes>
-    </ClerkProvider>
-  )
-}
+import { Route, Routes } from 'react-router-dom'
+import Sidebar from './components/sidebar'
+import HomePage from './pages/Home'
+import MassageCalculatorPage from './pages/MassageCalculator'
+import HistoryPage from './pages/History'
+import MaterialsPage from './pages/Materials'
+import CalendarPage from './pages/Calendar'
+import SettingsPage from './pages/Settings'
 
 function App() {
-  return <ClerkProviderWithRoutes />
+  return (
+    <div className="h-full relative">
+      <div className="hidden h-full md:flex md:w-72 md:flex-col md:fixed md:inset-y-0 bg-gray-900">
+        <Sidebar />
+      </div>
+      <main className="md:pl-72">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route
+            path="/massage-calculator"
+            element={<MassageCalculatorPage />}
+          />
+          <Route path="/history" element={<HistoryPage />} />
+          <Route path="/materials" element={<MaterialsPage />} />
+          <Route path="/calendar" element={<CalendarPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
+        </Routes>
+      </main>
+    </div>
+  )
 }
 
 export default App
